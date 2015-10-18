@@ -1,5 +1,8 @@
+package com.barclays
+
 import akka.actor.ActorSystem
-import spray.http.{MediaTypes, StatusCodes}
+//import com.evaluate.load.GraphVertexLoader
+import spray.http.{StatusCodes, MediaTypes}
 import spray.routing.SimpleRoutingApp
 
 object Service extends App with SimpleRoutingApp {
@@ -7,21 +10,25 @@ object Service extends App with SimpleRoutingApp {
 
   def persistToDatabase(data: String) = {
     println(s"$data")
+    //GraphVertexLoader.process(data)
   }
 
-  lazy val putCustomerRoute = pathPrefix("persist") {
-    (put & path(Segment)) { payload =>
-      respondWithMediaType(MediaTypes.`application/json`) {
-        persistToDatabase(payload)
+  lazy val persistDataRoute = put {
+    path("persist") {
+      entity(as[String]) { payload =>
+        respondWithMediaType(MediaTypes.`application/json`) {
 
-        respondWithStatus(StatusCodes.OK) {
-          complete(payload)
+          persistToDatabase(payload)
+
+          respondWithStatus(StatusCodes.OK) {
+            complete(payload)
+          }
         }
       }
     }
   }
 
-  startServer(interface = "localhost", port = 9090) {
-    putCustomerRoute
+  startServer(interface = "localhost", port = 9080) {
+    persistDataRoute
   }
 }
