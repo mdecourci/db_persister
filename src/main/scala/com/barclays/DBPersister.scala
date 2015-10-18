@@ -1,8 +1,7 @@
 package com.barclays
 
 import akka.actor.ActorSystem
-//import com.evaluate.load.GraphVertexLoader
-import spray.http.{StatusCodes, MediaTypes}
+import spray.http.{MediaTypes, StatusCodes}
 import spray.routing.SimpleRoutingApp
 
 object Service extends App with SimpleRoutingApp {
@@ -10,7 +9,6 @@ object Service extends App with SimpleRoutingApp {
 
   def persistToDatabase(data: String) = {
     println(s"$data")
-    //GraphVertexLoader.process(data)
   }
 
   lazy val persistDataRoute = put {
